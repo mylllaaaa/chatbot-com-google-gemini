@@ -16,7 +16,6 @@ public class ChatService {
 	@Autowired
 	GoogleGenAiChatModel geminiModel;
 	
-	
 	@Autowired
 	ChatRepository rep; 
 	
