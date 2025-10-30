@@ -25,6 +25,10 @@ public class ChatService {
 		return lista;
 	}
 	
+	public Chat getChatById(Long id) {
+		return rep.findById(id).get();
+	}
+	
 	public Chat savingQuestion(String userQuestion) {
 		String aiAnswer = geminiModel.call(userQuestion);
 		Chat chatInteraction = new Chat(userQuestion, aiAnswer);
@@ -34,5 +38,12 @@ public class ChatService {
 	
 	public void deleteChat(Long id) {
 		rep.deleteById(id);
+	}
+	
+	public Chat updateUserQuestion(Long id, String newQuestion) {
+		Chat existing = rep.findById(id).orElseThrow(() -> new RuntimeException("Chat not found."));
+		existing.setUserQuestion(newQuestion);
+		existing.setAiAnswer(geminiModel.call(newQuestion));
+		return rep.save(existing);
 	}
 }

@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import acc.br.GenAi.model.Chat;
 import acc.br.GenAi.service.ChatService;
+import org.springframework.web.bind.annotation.PutMapping;
+
 
 
 @RestController
@@ -39,6 +41,12 @@ public class ChatController {
 	public ResponseEntity<Void> deleteChat(@PathVariable Long id){
 		service.deleteChat(id);
 		return ResponseEntity.noContent().build();
+	}
+	
+	@PutMapping("edit/{id}")
+	public ResponseEntity<Chat> putMethodName(@PathVariable Long id, @RequestBody String newQuestion) {
+		Chat editedChat = service.updateUserQuestion(id, newQuestion);
+		return ResponseEntity.ok().body(editedChat);
 	}
 	
 }
