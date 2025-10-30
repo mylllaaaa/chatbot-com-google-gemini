@@ -45,18 +45,18 @@ public class ChatMain {
 					ResponseEntity<Chat> postResponse = restTemplate.postForEntity(baseUrl + "/chat", request,
 							Chat.class);
 
-					JOptionPane.showMessageDialog(null, "🤖 Resposta:\n" + postResponse.getBody().getAiAnswer());
+					JOptionPane.showMessageDialog(null, "Resposta:\n" + postResponse.getBody().getAiAnswer());
 					break;
 
 				case 1: // GET
 					ResponseEntity<Chat[]> getResponse = restTemplate.getForEntity(baseUrl + "/allChats", Chat[].class);
 
 					List<Chat> chats = Arrays.asList(getResponse.getBody());
-					StringBuilder sb = new StringBuilder("📜 Histórico:\n");
+					StringBuilder sb = new StringBuilder("Histórico:\n");
 					for (Chat c : chats) {
 						sb.append("ID: ").append(c.getId()).append("\n").append("Pergunta: ")
 								.append(c.getUserQuestion()).append("\n").append("Resposta: ").append(c.getAiAnswer())
-								.append("\n\n");
+								.append("\n");
 					}
 
 					JOptionPane.showMessageDialog(null, sb.toString());
@@ -78,13 +78,12 @@ public class ChatMain {
 
 					String urlPut = "http://localhost:8080/question/edit/" + id2;
 
-					RestTemplate restTemplate2 = new RestTemplate();
 					HttpHeaders headers2 = new HttpHeaders();
 					headers2.setContentType(MediaType.APPLICATION_JSON);
 
 					HttpEntity<String> request2 = new HttpEntity<>(newQuestion, headers2);
 
-					ResponseEntity<Chat> responsePut = restTemplate2.exchange(urlPut, HttpMethod.PUT, request2,
+					ResponseEntity<Chat> responsePut = restTemplate.exchange(urlPut, HttpMethod.PUT, request2,
 							Chat.class);
 
 					Chat editedChat = responsePut.getBody();

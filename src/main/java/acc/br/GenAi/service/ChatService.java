@@ -31,7 +31,14 @@ public class ChatService {
 	
 	public Chat savingQuestion(String userQuestion) {
 		String aiAnswer = geminiModel.call(userQuestion);
-		Chat chatInteraction = new Chat(userQuestion, aiAnswer);
+		Chat chatInteraction;
+		
+		if(aiAnswer == null) {
+			chatInteraction = new Chat(userQuestion, "We can't answer your question right now. Try again later.");
+		}
+		else {
+			chatInteraction = new Chat(userQuestion, aiAnswer);
+		}
 		rep.save(chatInteraction);
 		return chatInteraction;
 	}
@@ -41,9 +48,16 @@ public class ChatService {
 	}
 	
 	public Chat updateUserQuestion(Long id, String newQuestion) {
-		Chat existing = rep.findById(id).orElseThrow(() -> new RuntimeException("Chat not found."));
+		Chat existing = rep.findById(id).orElseThrow(() -> new RuntimeException("Chat not found with id: " + id + "."));
 		existing.setUserQuestion(newQuestion);
-		existing.setAiAnswer(geminiModel.call(newQuestion));
+		String aiAnswer = geminiModel.call(newQuestion);
+		
+		if(aiAnswer == null) {
+			existing.setAiAnswer("We can't answer your question right now. Try again later.");
+		} 
+		else {
+			existing.setAiAnswer(aiAnswer);
+		}
 		return rep.save(existing);
 	}
 }
